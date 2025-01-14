@@ -1,6 +1,8 @@
 'use client'
 
 import ProtectedRoute from '@/app/components/ProtectedRoute'
+import AppBreadcrumb from '@/components/app-breadcrumb'
+import CourseWeeksCard from '@/components/course-week-card'
 import AxiosInstance from '@/utils/axiosInstance'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -10,9 +12,16 @@ const StudentCoursePage = () => {
     const [courseDetail, setCourseDetail] = useState(null)
     const [courseWeek, setCourseWeeks] = useState(null)
     const [courseMaterial, setCourseMaterial] = useState(null)
+
+    console.log("Course week", courseWeek)
     
     const pathName = usePathname()
     const courseId = pathName.split('/')[3]
+
+    const itemsBreadcrumb = [
+        {title: "Course", href: "/course"},
+        {title: courseDetail?.title, href: "/course/1"},
+    ]
 
     useEffect(() => {
         const fetchCourseDetail = async () => {
@@ -42,21 +51,17 @@ const StudentCoursePage = () => {
     }, [])
 
     return (
-        <div className='m-10'>
-            <p className='font-semibold text-lg p-5'>Course</p>
-            <div className='grid grid-rows gap-y-3'>
-                {courseWeek ? (
-                    courseWeek.map((courseWeekDetail) => (
-                        <Link key={courseWeekDetail.id} href={`${pathName}/week/${courseWeekDetail.id}`}>
-                            <div
-                                className='p-5 border rounded-lg border-gray-500'
-                            >
-                                Pertemuan {courseWeekDetail.week_number} - {courseWeekDetail.title}
-                            </div>
-                        </Link>
-                    ))
-                ) : null}
+        <div>
+            <AppBreadcrumb items={itemsBreadcrumb}/>
+            <div className='py-7'>
+                <p className='font-semibold text-xl'>{courseDetail?.title}</p>
+                <p>Teacher: {courseDetail?.teacher.name}</p>
             </div>
+            <CourseWeeksCard
+                courseItems={courseWeek}
+                courseDetails={courseDetail}
+                pathName={pathName}
+            />
         </div>
     )
 }

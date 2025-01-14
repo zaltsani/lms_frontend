@@ -1,6 +1,10 @@
 'use client'
 
 import ProtectedRoute from '@/app/components/ProtectedRoute'
+import AppBreadcrumb from '@/components/app-breadcrumb'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AxiosInstance from '@/utils/axiosInstance'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +12,7 @@ import React, { useEffect, useState } from 'react'
 const Page = () => {
     const [students, setStudents] = useState([])
     const [courseWeek, setCourseWeek] = useState(null)
+    const [courseAttendances, setCourseAttendances] = useState(null)
 
     const router = useRouter()
     const pathName = usePathname()
@@ -15,8 +20,15 @@ const Page = () => {
     const week = pathName.split('/')[5]
     const previousPath = pathName.split('/').slice(0, 6).join('/')
 
-    const thClassName = 'border-b border-blue-gray-100 bg-blue-gray-50 p-4'
-    const tdClassName = 'border-b border-blue-gray-100 bg-blue-gray-50 p-2'
+    // const thClassName = 'border-b border-blue-gray-100 bg-blue-gray-50 p-4'
+    // const tdClassName = 'border-b border-blue-gray-100 bg-blue-gray-50 p-2'
+
+    const itemsBreadcrumb = [
+        {title: "Course", href: "/teacher/course"},
+        {title: courseWeek?.course.title, href: `/teacher/course/${courseWeek?.course.id}`},
+        {title: `Pertemuan ${courseWeek?.week_number}`, href: `/teacher/course/${courseWeek?.course.id}/week/${courseWeek?.id}`},
+        {title: "Presensi", href: `/teacher/course/${courseWeek?.course.id}/week/${courseWeek?.id}/presensi`},
+    ]
 
     useEffect(() => {
         const fetchStudentCourse = async () => {
@@ -49,6 +61,18 @@ const Page = () => {
         }
         fetchCourseWeek()
 
+        const fetchCourseAttendances = async () => {
+            try {
+                const response = await AxiosInstance.get(`/api/course/${courseId}/weeks/${week}/attendances/`)
+                if (response.status === 200) {
+                    setCourseAttendances(response.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchCourseAttendances()
+
     }, [])
 
     const handleAttendanceChange = (studentId, is_present) => {
@@ -74,12 +98,54 @@ const Page = () => {
             console.log(error)
         }
     }
-
-    // console.log(students)
     
     return (
-        <div>
-            <div className='justify-center rounded shadow m-10 mb-0 items-center'>
+        <div className='space-y-7'>
+            <AppBreadcrumb items={itemsBreadcrumb} />
+            <div className='font-semibold text-lg'>Presensi</div>
+            <Card>
+                <CardHeader>Presensi</CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>No.</TableHead>
+                                <TableHead>Nama</TableHead>
+                                <TableHead className="text-center">Presensi</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {students.map((student, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{student.student.name}</TableCell>
+                                    <TableCell>
+                                        <div className='flex justify-center text-sm'>
+                                            <button
+                                                onClick={() => handleAttendanceChange(student.id, 'present')}
+                                                className={`py-2 px-4 rounded rounded-r-none ${student.is_present === 'present' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                            >
+                                                Hadir
+                                            </button>
+                                            <button
+                                                onClick={() => handleAttendanceChange(student.id, 'absent')}
+                                                className={`py-2 px-4 rounded rounded-l-none ${student.is_present === 'absent' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                            >
+                                                Tidak Hadir
+                                            </button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+                <CardFooter>
+                    <Button variant="secondary" className="w-1/3" onClick={handleSubmit}>Submit</Button>
+                </CardFooter>
+            </Card>
+
+            {/* <div className='justify-center rounded shadow m-10 mb-0 items-center'>
                 <table className='w-full min-w-max table-auto'>
                     <thead>
                         <tr className='text-center'>
@@ -116,7 +182,8 @@ const Page = () => {
                     </tbody>
                 </table>
                 <button onClick={handleSubmit} className='font-semibold text-md text-gray-200 p-2 rounded-lg bg-blue-600 w-full'>Submit</button>
-            </div>
+            </div> */}
+
         </div>
     )
 }

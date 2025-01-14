@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 
-
 export default function Home() {
-  
-
   return (
-    <div className="w-screen h-screen overflow-hidden relative before:block before:absolute bg-blue-400 before:bg-black before:h-full before:w-full before:top-0 before:left-0 before:z-10 before:opacity-30">
+    <div className="w-screen h-screen overflow-hidden relative before:block before:absolute bg-blue-600 before:bg-black before:h-full before:w-full before:top-0 before:left-0 before:z-10 before:opacity-30">
       {/* <img
         src='https://picsum.photos/seed/picsum/1900/850'
         className="absolute top-0 left-0 min-h-full ob"

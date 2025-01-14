@@ -12,7 +12,7 @@ const LogoutButton = () => {
         try {
             const response = await AxiosInstance.post('/api/dj-rest-auth/logout/')
             if (response.status === 200) {
-                setUser(null)
+                // setUser(null)
                 localStorage.removeItem('token')
                 router.push('/login')
             } else {
@@ -25,7 +25,7 @@ const LogoutButton = () => {
 
     return (
         <button onClick={handleLogout}>
-            Logout
+            Log out
         </button>
     )
 }

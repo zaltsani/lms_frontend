@@ -1,6 +1,5 @@
 'use client'
 
-import ProtectedRoute from '@/app/components/ProtectedRoute'
 import AxiosInstance from '@/utils/axiosInstance'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -43,12 +42,9 @@ const Page = () => {
 
 
     return (
-        <div className='m-10'>
+        <div>
             <p className='font-semibold text-lg'>{courseWeek && `${courseWeek.course.title} - Pertemuan ${courseWeek.week_number}` }</p>
             <p className='font-semibold text-lg'>{courseWeek && courseWeek.title}</p>
-            
-            <Link href={`${pathName}/presensi/`}>Presensi</Link>
-            
             <div className='my-5'>
                 <p>{courseMaterial && courseMaterial.title}</p>
                 {courseMaterial && courseMaterial.file && (
@@ -60,4 +56,4 @@ const Page = () => {
     )
 }
 
-export default ProtectedRoute(Page)
+export default Page
