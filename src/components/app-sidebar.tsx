@@ -6,6 +6,8 @@ import { IoCalendarNumberOutline } from "react-icons/io5";
 import { LuGalleryVerticalEnd } from "react-icons/lu";
 import { SiTestcafe } from "react-icons/si";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { GrScorecard } from "react-icons/gr";
 import {
   Sidebar,
   SidebarContent,
@@ -44,6 +46,16 @@ const items = [
     icon: SiTestcafe
   },
   {
+    title: "Grades",
+    url: "/grades",
+    icon: GrScorecard
+  },
+  {
+    title: "Attendance",
+    url: "/attendance",
+    icon: FaPeopleGroup
+  },
+  {
     title: "Chat",
     url: "/chat",
     icon: IoChatboxEllipsesOutline
@@ -79,10 +91,13 @@ export function AppSidebar({ rootURL }) {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild >
                     <Link href={`${rootURL}${item.url}`}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                    <div>
+                    <item.icon className="size-6"/>
+                    </div>
+                      
+                      <span className="text-base" >{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
